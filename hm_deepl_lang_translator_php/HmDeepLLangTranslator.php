@@ -25,11 +25,12 @@ $res = curl_exec($curl);
 curl_close($curl);
 
 $json = json_decode($res, true);
-if ($json["translations"][0]["text"] == NULL) {
+$answer = $json["translations"][0]["text"];
+if ($answer == NULL) {
     $Hm->Macro->setVar( '$AnswerText', "翻訳エラーです" );
 } else {
     # var_dump($json);
-    $Hm->Macro->setVar( '$AnswerText', $json["translations"][0]["text"] );
+    $Hm->Macro->setVar( '$AnswerText', $answer );
 }
 ?>
 
