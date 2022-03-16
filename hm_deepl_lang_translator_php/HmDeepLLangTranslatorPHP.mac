@@ -1,0 +1,29 @@
+﻿// HmDeepLLangTranslatorPHP.mac v1.0.1.1
+// Copyright (c) 2022 Akitsugu Komiyama
+// under the MIT License
+
+// 環境変数から、DeepL Apps Script の翻訳APIへのURLアドレスを取得。
+// ご自身で環境変数「DEEPL_SCRIPT_TRANSLATION」にDeepLのAPIのAUTH_KEYを設定してください。
+$auth_key = getenv("DEEPL_SCRIPT_TRANSLATION"); 
+
+// 環境変数への登録が面倒さ、あるいは避けたいという場合は、下部へと直接認証キーの文字列を貼り付けること。
+// $auth_key = "*******-****-****-****-************:**";
+
+$source_lang = getarg(0); // 今のところ利用していない
+$target_lang = getarg(1);
+
+#PHP = loaddll( hidemarudir + @"\php\hmPeach.dll" );
+#_ = dllfuncw( #PHP, "DoFile", currentmacrodirectory +@"\HmDeepLLangTranslator.php" );
+freedll(#PHP);
+
+// 翻訳した文字列は$AnswerTextという変数に入ってるので、
+// 好きにして… 💔
+if (selecting) {
+    escape;
+    moveto selendx, selendy; // 選択してたら解除しつつも選択範囲の最後尾に
+} else {
+    gofileend; // 最後尾に
+}
+
+insert "\n" + $AnswerText;
+

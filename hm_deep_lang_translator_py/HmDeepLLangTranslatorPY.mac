@@ -1,0 +1,57 @@
+﻿/*
+ * HmDeepLLangTranslatorPY.mac v1.0.0.1
+ * Copyright (c) 2022 Akitsugu Komiyama
+ * under the MIT License
+ */
+
+// 環境変数から、DeepL Apps Script の翻訳APIへのURLアドレスを取得。
+// ご自身で環境変数「DEEPL_SCRIPT_TRANSLATION」にDeepLのAPIのAUTH_KEYを設定してください。
+$auth_key = getenv("DEEPL_SCRIPT_TRANSLATION"); 
+
+// 環境変数への登録が面倒さ、あるいは避けたいという場合は、下部へと直接認証キーの文字列を貼り付けること。
+// $auth_key = "*******-****-****-****-************:**";
+
+if (strstr(filename, "hmdeepllangtranslator") >= 0) {
+    // このマクロ自身に対して実行するのは、
+    // マクロのソース中に文字列を挿入してしまうため
+    // 意図せずマクロを破壊してしまう可能性が高い。
+    // 
+    // ほぼ確実に意図しない操作とみなして、止める
+    message("「HmDeepLLangTranslator自身」を翻訳対象にはできません。");
+    endmacro;
+}
+
+$s_lang=getarg(0);
+$t_lang=getarg(1);
+
+
+#DLL = loaddll(hidemarudir + @"\hmPython3.dll");
+#_ = dllfuncw(#DLL, "DoString", R"PY3(
+from hmPython import hm
+import HmDeepLLangTranslator
+
+text = hm.Edit.SelectedText or hm.Edit.TotalText
+
+auth_key = hm.Macro.Var["$auth_key"]
+s_lang = hm.Macro.Var["$s_lang"]
+t_lang = hm.Macro.Var["$t_lang"]
+
+try:
+    hm.Macro.Var["$answer"] = HmDeepLLangTranslator.TranslateByPost(auth_key, text, s_lang, t_lang)
+except Exception as e:
+    hm.Macro.Var["$answer"] = "翻訳エラー:" + str(e)
+)PY3"
+);
+
+// 翻訳した文字列は$answerという変数に入ってるので、
+// 好きにして… 💔
+if (selecting) {
+    escape;
+    moveto selendx, selendy; // 選択してたら解除しつつも選択範囲の最後尾に
+} else {
+    gofileend; // 最後尾に
+}
+
+insert "\n" + $answer;
+
+freedll( #DLL );
