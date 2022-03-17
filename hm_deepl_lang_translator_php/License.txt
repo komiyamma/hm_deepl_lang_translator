@@ -1,4 +1,4 @@
-- HmDeepLLangTranslatorPY
+- HmDeepLLangTranslatorPHP
    Copyright (C) 2022 Akitsugu Komiyama
 
 
