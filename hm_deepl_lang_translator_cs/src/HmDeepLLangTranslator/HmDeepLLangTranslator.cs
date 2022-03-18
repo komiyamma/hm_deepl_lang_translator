@@ -65,7 +65,11 @@ namespace HmDeepLLangTranslator
         {
             try
             {
-                string text = Hm.Edit.SelectedText ?? Hm.Edit.TotalText ?? "";
+                string text = Hm.Edit.SelectedText;
+                if (String.IsNullOrWhiteSpace(text))
+                {
+                    text = Hm.Edit.TotalText;
+                }
                 return _TryTranslate(auth_key, text, source_lang, target_lang);
             }
             catch (Exception ex)
