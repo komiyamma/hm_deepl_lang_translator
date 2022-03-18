@@ -1,0 +1,15 @@
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\ConsoleApp15.exe.config
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\ConsoleApp15.exe
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\ConsoleApp15.pdb
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\System.Text.Json.dll
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\System.Memory.dll
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\System.Text.Encodings.Web.dll
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\bin\Release\System.Buffers.dll
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.csproj.AssemblyReference.cache
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.csproj.SuggestedBindingRedirects.cache
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.exe.config
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.csproj.CopyComplete
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.exe
+C:\Users\admin\source\repos\ConsoleApp15\ConsoleApp15\obj\Release\ConsoleApp15.pdb
