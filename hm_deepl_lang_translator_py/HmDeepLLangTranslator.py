@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 
 #
-# HmDeepLLangTranslator.mac v1.0.0.1
+# HmDeepLLangTranslator.mac v1.1.0.1
 # Copyright (c) 2022 Akitsugu Komiyama
 # under the MIT License
 #
@@ -24,6 +24,7 @@ def TranslateByPost(auth_key, text, s_lang, t_lang):
     params = {
         "auth_key": auth_key,
         "text": text,
+        "source_lang": s_lang,
         "target_lang": t_lang
     }
     encode_data = urllib.parse.urlencode(params).encode('utf-8')
