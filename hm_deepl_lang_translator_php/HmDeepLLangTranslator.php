@@ -1,15 +1,18 @@
 ﻿<?php
 #
-# HmDeepLLangTranslator.php v1.0.1.1
+# HmDeepLLangTranslator.php v1.1.0.1
 # Copyright (c) 2022 Akitsugu Komiyama
 # under the MIT License
 #
 # 秀丸 v8.73以上
 
-$target_text = $Hm->Edit->getSelectedText() or $Hm->Edit->getTotalText();
+$target_text = $Hm->Edit->getSelectedText();
+if ($target_text == "") { $target_text = $Hm->Edit->getTotalText(); }
+echo $target_text;
 $param = array(
 'auth_key' => $Hm->Macro->getVar('$auth_key'),
 'text' => $target_text,
+'source_lang' => $Hm->Macro->getVar('$source_lang'),
 'target_lang' => $Hm->Macro->getVar('$target_lang'),
 );
 $curl = curl_init("https://api-free.deepl.com/v2/translate");

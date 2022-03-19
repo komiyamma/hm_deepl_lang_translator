@@ -1,6 +1,6 @@
 # HmDeepLLangTranslatorPHP
 
-![HmDeepLLangTranslatorPHP v1.0.1](https://img.shields.io/badge/HmDeepLLangTranslatorPHP-v1.0.1-6479ff.svg)
+![HmDeepLLangTranslatorPHP v1.1.0](https://img.shields.io/badge/HmDeepLLangTranslatorPHP-v1.1.0-6479ff.svg)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Hidemaru 8.98 x86](https://img.shields.io/badge/Hidemaru-v8.98_(32bit_version_only)-6479ff.svg)
 
