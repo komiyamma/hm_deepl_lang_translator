@@ -84,6 +84,18 @@ namespace HmDeepLLangTranslator
             {
                 using (var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api-free.deepl.com/v2/translate"))
                 {
+                    /*
+                     * こちらは%や\が組み合わさると逆に上手く動作しなくなる。
+                    List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+                    parameters.Add(new KeyValuePair<string, string>("auth_key", auth_key));
+                    parameters.Add(new KeyValuePair<string, string>("text", text));
+                    parameters.Add(new KeyValuePair<string, string>("source_lang", source_lang));
+                    parameters.Add(new KeyValuePair<string, string>("target_lang", target_lang));
+                    HttpContent httpContent = new FormUrlEncodedContent(parameters);
+                    request.Content = httpContent;
+                    */
+
+                    // 原始的だがこちらの方がまともに動作する
                     var contentList = new List<string>();
                     contentList.Add($"auth_key={auth_key}");
                     contentList.Add($"text={text}");
