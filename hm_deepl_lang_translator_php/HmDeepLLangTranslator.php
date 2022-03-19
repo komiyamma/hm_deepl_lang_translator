@@ -8,7 +8,6 @@
 
 $target_text = $Hm->Edit->getSelectedText();
 if ($target_text == "") { $target_text = $Hm->Edit->getTotalText(); }
-echo $target_text;
 $param = array(
 'auth_key' => $Hm->Macro->getVar('$auth_key'),
 'text' => $target_text,
