@@ -1,6 +1,6 @@
 # HmDeepLLangTranslatorCPP
 
-![HmDeepLLangTranslatorCPP v1.0.0](https://img.shields.io/badge/HmDeepLLangTranslatorCPP-v1.0.0-6479ff.svg)
+![HmDeepLLangTranslatorCPP v1.1.0](https://img.shields.io/badge/HmDeepLLangTranslatorCPP-v1.1.0-6479ff.svg)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Hidemaru 8.73](https://img.shields.io/badge/Hidemaru-v8.73-6479ff.svg)
 
