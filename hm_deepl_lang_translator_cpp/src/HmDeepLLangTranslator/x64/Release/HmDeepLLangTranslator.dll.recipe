@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>G:\repogitory\hm_deepl_lang_translator\HmDeepLLangTranslatorCPP\src\x64\Release\HmDeepLLangTranslator.dll</FullPath>
+      <FullPath>G:\repogitory\hm_deepl_lang_translator\hm_deepl_lang_translator_cpp\src\x64\Release\HmDeepLLangTranslator.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

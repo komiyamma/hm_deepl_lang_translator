@@ -104,6 +104,9 @@ wstring translate(const wstring wstr_auth_key, const wstring wstr_source_lang, c
 
 wstring ret;
 extern "C" __declspec(dllexport) cdecl wchar_t* try_translate(wchar_t* auth_key, wchar_t* source_lang, wchar_t* target_lang, wchar_t* override_text) {
+
+	Hm.funcDllExport();
+
 	ret.clear();
 
 	try {
