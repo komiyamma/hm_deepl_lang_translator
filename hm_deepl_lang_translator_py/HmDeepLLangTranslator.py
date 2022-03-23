@@ -41,6 +41,5 @@ def TranslateByPost(auth_key, text, s_lang, t_lang):
             return res_json["translations"][0]["text"]
     except urllib.error.HTTPError as e:
         return "翻訳エラー:" + str(e)
-        pass
 
     return "翻訳エラー";
