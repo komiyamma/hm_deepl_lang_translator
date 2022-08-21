@@ -1,0 +1,8 @@
+﻿setcompatiblemode 0x00100000;
+if(!selecting){
+    if( getclipboardinfo(0) != 0 && getclipboardinfo(1) == 0) {
+        addclipboard "";
+    }
+    endmacro;
+}
+copy;
