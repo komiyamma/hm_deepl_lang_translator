@@ -1,4 +1,8 @@
-﻿setcompatiblemode 0x00100000;
+﻿/*
+ * This codes is licensed under CC0 1.0 Universal
+ */
+
+setcompatiblemode 0x00100000;
 if(!selecting){
     if( getclipboardinfo(0) != 0 && getclipboardinfo(1) == 0) {
         addclipboard "";
