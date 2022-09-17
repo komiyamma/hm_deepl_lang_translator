@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.props" Condition="Exists('..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.props')" />
+  <Import Project="..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.props" Condition="Exists('..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -87,12 +87,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX20_CISO646_REMOVED_WARNING;WIN32;_DEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,13 +107,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CURL_STATICLIB;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX20_CISO646_REMOVED_WARNING;CURL_STATICLIB;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>.\curlcpp\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,12 +130,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX20_CISO646_REMOVED_WARNING;_DEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>.\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,7 +150,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX20_CISO646_REMOVED_WARNING;_CRT_SECURE_NO_WARNINGS;NDEBUG;HMDEEPLLANGTRANSLATOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -208,13 +211,13 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.targets" Condition="Exists('..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.targets')" />
+    <Import Project="..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.targets" Condition="Exists('..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.props'))" />
-    <Error Condition="!Exists('..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\HmCppInvoke-vs2022.2.0.9.8\build\native\HmCppInvoke-vs2022.targets'))" />
+    <Error Condition="!Exists('..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.props'))" />
+    <Error Condition="!Exists('..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\HmCppInvoke-vs2022.2.1.2.2\build\native\HmCppInvoke-vs2022.targets'))" />
   </Target>
 </Project>
