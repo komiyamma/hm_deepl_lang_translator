@@ -10,7 +10,7 @@ js {
     let auth_key = getenv("DEEPL_SCRIPT_TRANSLATION");
 
     // 環境変数への登録が面倒、あるいは避けたいという場合は、下部へと直接認証キーの文字列を貼り付けること。
-    // auth_key = "*******-****-****-****-************:**";
+    // let auth_key = "*******-****-****-****-************:**";
 
     // 翻訳対象のテキスト
     let text = hidemaru.getSelectedText() || hidemaru.getTotalText();
