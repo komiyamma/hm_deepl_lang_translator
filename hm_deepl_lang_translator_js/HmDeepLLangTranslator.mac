@@ -35,26 +35,26 @@ js {
             // エラーが出る可能性があるため、先頭でローカルに代入してみる
             let text = translate_text["translations"][0]["text"];
 
-	        begingroupundo();
-	        if (is_last_selecting) {
-	            escapeselect();
-	            moveto(selx, sely); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
-	        } else {
-	            gofileend(); // 最後尾に
-	        }
+            begingroupundo();
+            if (is_last_selecting) {
+                escapeselect();
+                moveto(selx, sely); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+            } else {
+                gofileend(); // 最後尾に
+            }
 
-	        if (column() != 0) { // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
-	            insertreturn();
-	        }
+            if (column() != 0) { // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
+                insertreturn();
+            }
 
-	        insert(text);
-	        endgroupundo();
+            insert(text);
+            endgroupundo();
 
         } catch(e) {
 
             writeLineOutputPane("翻訳エラー:");
         } finally {
-	        translate_text = "HmDeepLTranslateResponseTextComplete";
+            translate_text = "HmDeepLTranslateResponseTextComplete";
         }
     }
 
