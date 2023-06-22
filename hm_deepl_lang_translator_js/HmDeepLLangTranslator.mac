@@ -31,21 +31,31 @@ js {
     // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
     var translate_text = "";
     function printTranslateText() {
-        begingroupundo();
-        if (is_last_selecting) {
-            escapeselect();
-            moveto(selendx(), selendy()); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
-        } else {
-            gofileend(); // 最後尾に
-        }
+        try {
+            // エラーが出る可能性があるため、先頭でローカルに代入してみる
+            let text = translate_text["translations"][0]["text"];
 
-        if (column() != 0) { // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
-            insertreturn();
-        }
+	        begingroupundo();
+	        if (is_last_selecting) {
+	            escapeselect();
+	            moveto(selendx(), selendy()); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+	        } else {
+	            gofileend(); // 最後尾に
+	        }
 
-        insert(translate_text["translations"][0]["text"]);
-        translate_text = "HmDeepLTranslateResponseTextComplete";
-        endgroupundo();
+	        if (column() != 0) { // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
+	            insertreturn();
+	        }
+
+	        insert(text);
+	        endgroupundo();
+
+        } catch(e) {
+
+            writeLineOutputPane("翻訳エラー:");
+        } finally {
+	        translate_text = "HmDeepLTranslateResponseTextComplete";
+        }
     }
 
     // 非同期内でのスリープ関数用途
@@ -53,7 +63,7 @@ js {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function mainXmlHttpRequest() {
+    function requestTranslate() {
         try {
             let xmlHttpRequest = new XMLHttpRequest();
 
@@ -77,30 +87,30 @@ js {
                             // マクロ実行中ならばちょっとまつ、
                             if (hidemaru.isMacroExecuting()) {
                                 await sleep(500);
-                            } else {
-                                // 最終処理
-                                hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
-                                return;
+                                continue;
                             }
 
+                            // 最終処理。これを実行できたら 続きはしない
+                            hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
+                            return;
                         }
-                        outputpane_log("他のマクロ実行中が継続したため、翻訳を出力できませんでした。");
+                        writeLineOutputPane("他のマクロ実行中が継続したため、翻訳を出力できませんでした。");
                     } catch (e) {
-                        outputpane_log("翻訳エラー:");
+                        writeLineOutputPane("翻訳エラー:");
                     }
                 } else if (this.readyState == READYSTATE_COMPLETED && this.status != HTTP_STATUS_OK) {
-                    outputpane_log("通信エラー:" + this.status);
+                    writeLineOutputPane("通信エラー:" + this.status);
                 }
             }
 
             // よくわからんエラー用
             xmlHttpRequest.onerror = function () {
-                outputpane_log("不明なエラー:");
+                writeLineOutputPane("不明なエラー:");
             }
 
             // 中断用
             xmlHttpRequest.onabort = function () {
-                outputpane_log("翻訳の中断");
+                writeLineOutputPane("翻訳の中断");
             }
 
             // GETは長文だと何が起きるかわからんのでPOSTで
@@ -108,18 +118,19 @@ js {
 
             // サーバに対して解析方法を指定する
             xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
             // データをリクエスト ボディに含めて送信する
             xmlHttpRequest.send(data);
 
         } catch(e) {
-            outputpane_log("通信エラー:");
+            writeLineOutputPane("通信エラー:");
         }
     }
 
-    mainXmlHttpRequest();
+    requestTranslate();
 
     // エラーなどをアプトプット枠に表示する用途
-    function outputpane_log(msg) {
+    function writeLineOutputPane(msg) {
         let dll = loaddll("HmOutputPane.dll");
         dll.dllfuncw.OutputW(hidemaru.getCurrentWindowHandle(), msg + "\r\n");
     }
