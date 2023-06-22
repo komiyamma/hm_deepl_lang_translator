@@ -1,0 +1,125 @@
+﻿// HmDeepLLangTranslator.mac v1.0.0.1
+// Copyright (c) 2023 Akitsugu Komiyama
+// under the MIT License
+
+jsmode "WebView2";
+js {
+
+    // DEEPLのAPIキー
+    let auth_key = getenv("DEEPL_SCRIPT_TRANSLATION");
+
+    // 翻訳対象のテキスト
+    let text = hidemaru.getSelectedText() || hidemaru.getTotalText();
+
+    let script_url = "https://api-free.deepl.com/v2/translate"; // 有料版の人は https://api.deepl.com/v2/translate と書き換えると無料の制限が無くなる
+    let data = {
+        auth_key: auth_key,
+        text: text,
+        source_lang: getarg(0),
+        target_lang: getarg(1)
+    };
+
+    // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
+    var translateText = "";
+    function print_translateText() {
+        begingroupundo();
+        if (selecting()) {
+            escapeselect();
+            moveto(selendx(), selendy()); // 選択してたら解除しつつも選択範囲の最後尾に
+            if (column() != 0) {          // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
+                insertreturn();
+            }
+        } else {
+            gofileend(); // 最後尾に
+        }
+
+        try {
+            insert (translateText["translations"][0]["text"]);
+        } catch (e) {
+            outputpane_log(e);
+        }
+        translateText = "HmDeepLTranslateResponseTextComplete";
+        endgroupundo();
+    }
+
+    // 非同期内でのスリープ関数用途
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    let xmlHttpRequest = new XMLHttpRequest();
+
+    // 返信状況進行用
+    xmlHttpRequest.onreadystatechange = async function () {
+
+        var READYSTATE_COMPLETED = 4;
+        var HTTP_STATUS_OK = 200;
+
+        // うまくいって完了したっぽい
+        if (this.readyState == READYSTATE_COMPLETED && this.status == HTTP_STATUS_OK) {
+            try {
+                // オブジェクトとして var 変数に代入。非同期と同期の両方で利用するので var になっている
+                translateText = JSON.parse(this.responseText);
+                // マクロ実行中かもしれないので、5回トライする
+                for (let i = 0; i < 5; i++) {
+                    // 最後の表示処理が済んでるならば終わり
+                    if (translateText == "HmDeepLTranslateResponseTextComplete") {
+                        return;
+                    }
+
+                    // マクロ実行中ならばちょっとまつ、
+                    if (hidemaru.isMacroExecuting()) {
+                        await sleep(500);
+                    } else {
+                        // 最終処理
+                        hidemaru.postExecMacroMemory("js{ print_translateText(); }");
+                        return;
+                    }
+
+                }
+                outputpane_log("出力エラー:" + "他のマクロが実行中であるため、翻訳結果を出力できませんでした");
+            } catch (e) {
+                outputpane_log("翻訳エラー:" + e);
+            }
+        } else if (this.readyState == READYSTATE_COMPLETED && this.status != HTTP_STATUS_OK) {
+            outputpane_log("通信エラー:" + this.status);
+        }
+    }
+
+    // よくわからんエラー用
+    xmlHttpRequest.onerror = function () {
+        outputpane_log("不明なエラー:");
+    }
+
+    // 中断用
+    xmlHttpRequest.onabort = function () {
+        outputpane_log("翻訳の中断");
+    }
+
+    // GETは長文だと何が起きるかわからんのでPOSTで
+    xmlHttpRequest.open('POST', script_url);
+
+    // サーバに対して解析方法を指定する
+    xmlHttpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    // データをリクエスト ボディに含めて送信する
+    xmlHttpRequest.send(EncodeHTMLForm(data));
+
+    // POSTのデータのEncode用
+    function EncodeHTMLForm(data) {
+        var params = [];
+        for (var name in data) {
+            var value = data[name];
+            var param = encodeURIComponent(name).replace(/%20/g, '+') + '='
+                + encodeURIComponent(value).replace(/%20/g, '+');
+            params.push(param);
+        }
+        return params.join('&');
+    }
+
+    // エラーなどをアプトプット枠に表示する用途
+    function outputpane_log(msg) {
+        let dll = loaddll("HmOutputPane.dll");
+        dll.dllfuncw.OutputW(hidemaru.getWindowHandle(), msg + "\r\n");
+    }
+}
