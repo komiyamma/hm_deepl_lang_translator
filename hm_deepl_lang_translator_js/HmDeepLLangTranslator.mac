@@ -26,7 +26,7 @@ js {
 
     // マクロ実行から翻訳結果が返ってくるまでの間に時間的なずれがあり、その間編集ペインはフリーであるため、選択中だったかを記憶しておく
     // これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
-    let is_last_selecting = selecting();
+    let [is_last_selecting, selx, sely] = [selecting(), selendx(), selendy()];
 
     // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
     var translate_text = "";
@@ -38,7 +38,7 @@ js {
 	        begingroupundo();
 	        if (is_last_selecting) {
 	            escapeselect();
-	            moveto(selendx(), selendy()); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+	            moveto(selx, sely); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
 	        } else {
 	            gofileend(); // 最後尾に
 	        }
