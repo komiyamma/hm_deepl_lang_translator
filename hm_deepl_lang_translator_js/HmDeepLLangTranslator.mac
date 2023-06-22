@@ -112,7 +112,7 @@ js {
 
             // データをリクエスト ボディに含めて送信する
             xmlHttpRequest.send(EncodeHTMLForm(data));
-          
+
         } catch(e) {
             outputpane_log("通信エラー:");
         }
