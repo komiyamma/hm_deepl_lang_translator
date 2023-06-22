@@ -40,7 +40,7 @@ js {
         }
 
         try {
-            insert (translateText["translations"][0]["text"]);
+            insert(translateText["translations"][0]["text"]);
         } catch (e) {
             outputpane_log(e);
         }
