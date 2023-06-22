@@ -5,8 +5,12 @@
 jsmode "WebView2";
 js {
 
-    // DEEPLのAPIキー
+    // 環境変数から、DeepL Apps Script の翻訳APIへのURLアドレスを取得。
+    // ご自身で環境変数「DEEPL_SCRIPT_TRANSLATION」にDeepLのAPIのAUTH_KEYを設定してください。
     let auth_key = getenv("DEEPL_SCRIPT_TRANSLATION");
+
+    // 環境変数への登録が面倒、あるいは避けたいという場合は、下部へと直接認証キーの文字列を貼り付けること。
+    // auth_key = "*******-****-****-****-************:**";
 
     // 翻訳対象のテキスト
     let text = hidemaru.getSelectedText() || hidemaru.getTotalText();
