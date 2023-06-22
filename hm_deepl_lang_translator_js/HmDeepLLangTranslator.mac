@@ -15,7 +15,9 @@ js {
     // 翻訳対象のテキスト
     let text = hidemaru.getSelectedText() || hidemaru.getTotalText();
 
-    let script_url = "https://api-free.deepl.com/v2/translate"; // 有料版の人は https://api.deepl.com/v2/translate と書き換えると無料の制限が無くなる
+    // 有料版の人は https://api.deepl.com/v2/translate と書き換えると無料の制限が無くなる
+    let script_url = "https://api-free.deepl.com/v2/translate";
+
     let data = {
         auth_key: auth_key,
         text: text,
