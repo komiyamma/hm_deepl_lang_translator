@@ -61,22 +61,17 @@ js {
     requestTranslate();
 
     function requestTranslate() {
-        try {
+        fetch(endpoint_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: String(params),
+        })
+            .then(response => response.json())
+            .then(json_data => recieveFetchReply(json_data))
+            .catch(error => writeLineOutputPane('通信エラー:', error));
 
-            fetch(endpoint_url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: String(params),
-            })
-                .then(response => response.json())
-                .then(json_data => recieveFetchReply(json_data))
-                .catch(error => console.error('翻訳エラー:', error));
-
-        } catch (e) {
-            writeLineOutputPane("通信エラー:");
-        }
     }
 
     async function recieveFetchReply(data) {
