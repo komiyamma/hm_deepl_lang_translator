@@ -91,7 +91,7 @@ js {
 
                 // マクロ実行中ならばちょっとまつ、
                 if (hidemaru.isMacroExecuting()) {
-                    await sleep(500);
+                    await sleep_in_tick(500);
                     continue;
                 }
 
@@ -106,7 +106,7 @@ js {
     }
 
     // 非同期内でのスリープ関数用途
-    function sleep(ms) {
+    function sleep_in_tick(ms) {
         return new Promise(resolve => hidemaru.setTimeout(resolve, ms));
     }
 
