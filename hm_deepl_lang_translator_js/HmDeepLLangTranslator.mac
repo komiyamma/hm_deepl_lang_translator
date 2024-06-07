@@ -1,6 +1,8 @@
-﻿// HmDeepLLangTranslator.mac v1.2.0.2
+﻿// HmDeepLLangTranslator.mac v1.2.0.3
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
+
+hidemaruversion "9.25.99";
 
 jsmode @"WebView2\HmDeepLLangTranslatorJS";
 
@@ -95,8 +97,13 @@ js {
                     continue;
                 }
 
-                // 最終処理。これを実行できたら 続きはしない
-                hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
+                let peRetry = hidemaru.setInterval(()=>{
+                    if (hidemaru.isScheduled?.()) return;
+                    let success = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
+                    if (success === 0) return; // 再挑戦
+                    hidemaru.clearInterval(peRetry);
+                }, 100);
+
                 return;
             }
             writeLineOutputPane("他のマクロ実行中が継続したため、翻訳を出力できませんでした。");
