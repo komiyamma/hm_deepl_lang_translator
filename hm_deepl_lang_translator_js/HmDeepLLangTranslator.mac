@@ -99,8 +99,8 @@ js {
 
                 let peRetry = hidemaru.setInterval(()=>{
                     if (hidemaru.isScheduled?.()) return;
-                    let success = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
-                    if (success === 0) return; // 再挑戦
+                    let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
+                    if (isScheduled === 0) return; // 再挑戦
                     hidemaru.clearInterval(peRetry);
                 }, 100);
 
