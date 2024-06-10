@@ -85,16 +85,8 @@ js {
             translate_obj = data;
 
             let peRetry = hidemaru.setInterval(()=>{
-
-                // マクロ実行中ならばちょっとまつ、
-                if (hidemaru.isMacroExecuting()) return; // 再挑戦
-
-                // postExecスケジュール中ならばちょっとまつ、
-                if (hidemaru.isScheduled?.()) return; // 再挑戦
-
                 let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
                 if (isScheduled === 0) return; // 再挑戦
-
                 hidemaru.clearInterval(peRetry);
             }, 100);
 
