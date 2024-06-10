@@ -1,4 +1,4 @@
-﻿// HmDeepLLangTranslator.mac v1.2.0.4
+﻿// HmDeepLLangTranslator.mac v1.2.0.5
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
 
@@ -84,37 +84,23 @@ js {
         try {
             translate_obj = data;
 
-            // マクロ実行中かもしれないので、5回トライする
-            for (let i = 0; i < 5; i++) {
-                // 最後の表示処理が済んでるならば終わり
-                if (translate_obj == {}) {
-                    return;
-                }
+            let peRetry = hidemaru.setInterval(()=>{
 
                 // マクロ実行中ならばちょっとまつ、
-                if (hidemaru.isMacroExecuting()) {
-                    await sleep_in_tick(500);
-                    continue;
-                }
+                if (hidemaru.isMacroExecuting()) return; // 再挑戦
 
-                let peRetry = hidemaru.setInterval(()=>{
-                    if (hidemaru.isScheduled?.()) return;
-                    let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
-                    if (isScheduled === 0) return; // 再挑戦
-                    hidemaru.clearInterval(peRetry);
-                }, 100);
+                // postExecスケジュール中ならばちょっとまつ、
+                if (hidemaru.isScheduled?.()) return; // 再挑戦
 
-                return;
-            }
-            writeLineOutputPane("他のマクロ実行中が継続したため、翻訳を出力できませんでした。");
+                let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
+                if (isScheduled === 0) return; // 再挑戦
+
+                hidemaru.clearInterval(peRetry);
+            }, 100);
+
         } catch (e) {
             writeLineOutputPane("翻訳エラー:");
         }
-    }
-
-    // 非同期内でのスリープ関数用途
-    function sleep_in_tick(ms) {
-        return new Promise(resolve => hidemaru.setTimeout(resolve, ms));
     }
 
     // エラーなどをアプトプット枠に表示する用途
