@@ -1,4 +1,4 @@
-﻿// HmDeepLLangTranslator.mac v1.2.0.5
+﻿// HmDeepLLangTranslator.mac v1.2.0.6
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
 
@@ -85,9 +85,8 @@ js {
             translate_obj = data;
 
             let peRetry = hidemaru.setInterval(()=>{
-                let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
-                if (isScheduled === 0) return; // 再挑戦
-                hidemaru.clearInterval(peRetry);
+                let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }") ?? 1;
+                if (isScheduled) { hidemaru.clearInterval(peRetry); }
             }, 100);
 
         } catch (e) {
