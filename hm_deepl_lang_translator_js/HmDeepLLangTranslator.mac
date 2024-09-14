@@ -35,7 +35,7 @@ let params = new URLSearchParams({
 
 // マクロ実行から翻訳結果が返ってくるまでの間に時間的なずれがあり、その間編集ペインはフリーであるため、選択中だったかを記憶しておく
 // これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
-let [is_last_selecting, n_seltopx, n_selendx, n_selendy, n_linelen] = [selecting(), seltopx(), selendx(), selendy(), linelen()];
+let [is_last_selecting, n_seltopcolumn, n_selendcolumn, n_selendlineno, n_linelen] = [selecting(), seltopcolumn(), selendcolumn(), selendlineno(), linelen()];
 
 // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
 var translate_obj = {};
@@ -49,16 +49,16 @@ function printTranslateText() {
         // 選択中なら選択を解除して、選択位置の最後の座標に移動
         if (is_last_selecting) {
             escapeselect();
-            moveto(n_selendx, n_selendy); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+            moveto2(n_selendcolumn, n_selendlineno); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
 
             // 行末まで選択することで、カーソルが先頭にある。
-            if (selendx() == 0) {
+            if (n_selendcolumn == 0) {
                 // 最後に改行がなければ改行を付ける
                 text = text.endsWith("\n") ? text : `${text}\n`;
             }
 
             // 文頭から文末まで選択することで行選択相当になっている。
-            else if (seltopx() == 0 && selendx() == linelen()) {
+            else if (n_seltopcolumn == 0 && n_selendcolumn == n_linelen) {
                 // 文末に最後改行が無いので、先頭に改行を入れる
                 // 最後に改行がなければ改行を付ける
                 text = `\n${text}`;
