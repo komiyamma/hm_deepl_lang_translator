@@ -1,4 +1,4 @@
-﻿// HmDeepLLangTranslator.mac v1.2.0.7
+﻿// HmDeepLLangTranslator.mac v1.2.0.9
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
 
@@ -8,133 +8,125 @@ jsmode @"WebView2\HmDeepLLangTranslatorJS";
 
 js {
 
-    // 環境変数から、DeepL Apps Script の翻訳APIへのURLアドレスを取得。
-    // ご自身で環境変数「DEEPL_SCRIPT_TRANSLATION」にDeepLのAPIのAUTH_KEYを設定してください。
-    let auth_key = getenv("DEEPL_SCRIPT_TRANSLATION");
 
-    // 環境変数への登録が面倒、あるいは避けたいという場合は、下部へと直接認証キーの文字列を貼り付けること。
-    // let auth_key = "*******-****-****-****-************:**";
 
-    // 翻訳対象のテキスト
-    let text = hidemaru.getSelectedText() || hidemaru.getTotalText();
+// 環境変数から、DeepL Apps Script の翻訳APIへのURLアドレスを取得。
+// ご自身で環境変数「DEEPL_SCRIPT_TRANSLATION」にDeepLのAPIのAUTH_KEYを設定してください。
+let auth_key = getenv("DEEPL_SCRIPT_TRANSLATION");
 
-    // 有料版の人は https://api.deepl.com/v2/translate と書き換えると無料の制限が無くなる
-    let endpoint_url = "https://api-free.deepl.com/v2/translate";
+// 環境変数への登録が面倒、あるいは避けたいという場合は、下部へと直接認証キーの文字列を貼り付けること。
+// let auth_key = "*******-****-****-****-************:**";
 
-    let params = new URLSearchParams();
-    params.append("auth_key", auth_key);
-    params.append("text", text);
-    params.append("source_lang", getarg(0));
-    params.append("target_lang", getarg(1));
+// 翻訳対象のテキスト
+let text = hidemaru.getSelectedText() || hidemaru.getTotalText();
 
-    // マクロ実行から翻訳結果が返ってくるまでの間に時間的なずれがあり、その間編集ペインはフリーであるため、選択中だったかを記憶しておく
-    // これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
-    let [is_last_selecting, _seltopx, _selendx, _selendy, _linelen] = [selecting(), seltopx(), selendx(), selendy(), linelen()];
+// 有料版の人は https://api.deepl.com/v2/translate と書き換えると無料の制限が無くなる
+let endpoint_url = "https://api-free.deepl.com/v2/translate";
 
-    // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
-    var translate_obj = {};
-    function printTranslateText() {
-        try {
-            // エラーが出る可能性があるため、先頭でローカルに代入してみる
-            let text = translate_obj["translations"][0]["text"];
+let source_lang = getarg(0);
+let target_lang = getarg(1);
 
-            begingroupundo();
+let params = new URLSearchParams({
+    auth_key,
+    text,
+    source_lang,
+    target_lang
+});
 
-            // 選択中なら選択を解除して、選択位置の最後の座標に移動
-            if (is_last_selecting) {
-                escapeselect();
-                moveto(_selendx, _selendy); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+// マクロ実行から翻訳結果が返ってくるまでの間に時間的なずれがあり、その間編集ペインはフリーであるため、選択中だったかを記憶しておく
+// これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
+let [is_last_selecting, n_seltopx, n_selendx, n_selendy, n_linelen] = [selecting(), seltopx(), selendx(), selendy(), linelen()];
 
-                // 行末まで選択することで、カーソルが先頭にある。
-                if (selendx() == 0) {
-                    // 最後に改行がなければ改行を付ける
-                    if (text.endsWith("\n")) {
-                        insert(text);
-                    } else {
-                        insert(text + "\n");
-                    }
-                }
+// 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
+var translate_obj = {};
+function printTranslateText() {
+    try {
+        // エラーが出る可能性があるため、先頭でローカルに代入してみる
+        let text = translate_obj["translations"][0]["text"];
 
-                // 文頭から文末まで選択することで行選択相当になっている。
-                else if (seltopx() == 0 && selendx() == linelen()) {
-                    // 文末に最後改行が無いので、先頭に改行を入れる
-                    // 最後に改行がなければ改行を付ける
-                    if (text.endsWith("\n")) {
-                        insert("\n" + text);
-                    } else {
-                        insert("\n" + text + "\n");
-                    }
-                }
+        begingroupundo();
 
-                // 通常の選択
-                else {
-                    // 文中にそのまま挿入する
-                    insert(text);
-                }
+        // 選択中なら選択を解除して、選択位置の最後の座標に移動
+        if (is_last_selecting) {
+            escapeselect();
+            moveto(n_selendx, n_selendy); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+
+            // 行末まで選択することで、カーソルが先頭にある。
+            if (selendx() == 0) {
+                // 最後に改行がなければ改行を付ける
+                text = text.endsWith("\n") ? text : `${text}\n`;
             }
 
-            else {
-                gofileend(); // 最後尾に
-
-                // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
-                if (column() != 0) {
-                    insertreturn();
-                }
-
-                insert(text);
+            // 文頭から文末まで選択することで行選択相当になっている。
+            else if (seltopx() == 0 && selendx() == linelen()) {
+                // 文末に最後改行が無いので、先頭に改行を入れる
+                // 最後に改行がなければ改行を付ける
+                text = `\n${text}`;
             }
-
-            endgroupundo();
-
-        } catch (e) {
-            writeLineOutputPane("翻訳エラー:");
-        } finally {
-            translate_obj = {};
         }
-    }
+        // 選択中でないなら、文末に追加
+        else {
+            gofileend(); // 最後尾に
 
-    requestTranslate();
-
-    function requestTranslate() {
-        fetch(endpoint_url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: String(params),
-        })
-            .then(response => response.json())
-            .then(json_data => recieveFetchReply(json_data))
-            .catch(error => writeLineOutputPane('通信エラー:', error));
-
-    }
-
-    async function recieveFetchReply(data) {
-        try {
-            translate_obj = data;
-
-            let peRetry = hidemaru.setInterval(()=>{
-
-                // マクロ実行中ならばちょっとまつ、
-                if (hidemaru.isMacroExecuting()) return; // 再挑戦
-
-                // postExecスケジュール中ならばちょっとまつ、
-                if (hidemaru.isScheduled?.()) return; // 再挑戦
-
-                let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
-                if (isScheduled === 0) return; // 再挑戦
-
-                hidemaru.clearInterval(peRetry);
-            }, 100);
-
-        } catch (e) {
-            writeLineOutputPane("翻訳エラー:");
+            // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
+            if (column() != 0) {
+                insertreturn();
+            }
         }
-    }
 
-    // エラーなどをアプトプット枠に表示する用途
-    function writeLineOutputPane(msg) {
-        let dll = loaddll("HmOutputPane.dll");
-        dll.dllfuncw.OutputW(hidemaru.getCurrentWindowHandle(), msg + "\r\n");
+        insert(text);
+
+        endgroupundo();
+
+    } catch (error) {
+        writeLineOutputPane("翻訳エラー:" + error);
+    } finally {
+        translate_obj = {};
     }
 }
+
+requestTranslate();
+
+function requestTranslate() {
+    fetch(endpoint_url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: String(params),
+    })
+        .then(response => response.json())
+        .then(json_data => recieveFetchReply(json_data))
+        .catch(error => writeLineOutputPane('通信エラー:' + error));
+
+}
+
+async function recieveFetchReply(data) {
+    try {
+        translate_obj = data;
+
+        let peRetry = hidemaru.setInterval(() => {
+
+            // マクロ実行中ならばちょっとまつ、
+            if (hidemaru.isMacroExecuting()) return; // 再挑戦
+
+            let isScheduled = hidemaru.postExecMacroMemory("js{ printTranslateText(); }");
+            if (isScheduled === 0) return; // 再挑戦。postExecMacroMemoryの新旧仕様の揺れのため、「===」が必須。
+
+            hidemaru.clearInterval(peRetry);
+        }, 100);
+
+    } catch (e) {
+        writeLineOutputPane("翻訳エラー:");
+    }
+}
+
+// エラーなどをアプトプット枠に表示する用途
+function writeLineOutputPane(msg) {
+    let dll = loaddll("HmOutputPane.dll");
+    dll.dllFuncW.OutputW(hidemaru.getCurrentWindowHandle(), msg + "\r\n");
+}
+
+
+
+} // js
