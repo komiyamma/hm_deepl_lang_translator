@@ -26,7 +26,7 @@ let endpoint_url = "https://api-free.deepl.com/v2/translate";
 let source_lang = getarg(0);
 let target_lang = getarg(1);
 
-let params = new URLSearchParams({
+const params = new URLSearchParams({
     auth_key,
     text,
     source_lang,
@@ -35,7 +35,7 @@ let params = new URLSearchParams({
 
 // マクロ実行から翻訳結果が返ってくるまでの間に時間的なずれがあり、その間編集ペインはフリーであるため、選択中だったかを記憶しておく
 // これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
-let [is_last_selecting, n_seltopcolumn, n_selendcolumn, n_selendlineno, n_linelen] = [selecting(), seltopcolumn(), selendcolumn(), selendlineno(), linelen()];
+const [is_last_selecting, n_seltopcolumn, n_selendcolumn, n_selendlineno, n_linelen] = [selecting(), seltopcolumn(), selendcolumn(), selendlineno(), linelen()];
 
 // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
 var translate_obj = {};
@@ -59,8 +59,8 @@ function printTranslateText() {
 
             // 文頭から文末まで選択することで行選択相当になっている。
             else if (n_seltopcolumn == 0 && n_selendcolumn == n_linelen) {
-                // 文末に最後改行が無いので、先頭に改行を入れる
-                // 最後に改行がなければ改行を付ける
+                // 文頭に最後改行が無いので、先頭に改行を入れる
+                // 文末の改行は選択している最後が改行を含むか含まないかでそのままにしておけば辻褄が合う
                 text = `\n${text}`;
             }
         }
@@ -85,9 +85,7 @@ function printTranslateText() {
     }
 }
 
-requestTranslate();
-
-function requestTranslate() {
+function requestTranslate(params) {
     fetch(endpoint_url, {
         method: 'POST',
         headers: {
@@ -126,6 +124,8 @@ function writeLineOutputPane(msg) {
     let dll = loaddll("HmOutputPane.dll");
     dll.dllFuncW.OutputW(hidemaru.getCurrentWindowHandle(), msg + "\r\n");
 }
+
+requestTranslate(params);
 
 
 
