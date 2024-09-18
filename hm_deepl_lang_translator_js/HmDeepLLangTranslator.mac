@@ -59,7 +59,7 @@ function printTranslateText() {
             }
 
             // 行末まで選択することで、カーソルが先頭にある。
-            if (n_selendcolumn == 0) {
+            else if (n_selendcolumn == 0) {
                 // 最後に改行がなければ改行を付ける
                 answer = answer.endsWith("\n") ? answer : `${answer}\n`;
             }
@@ -73,6 +73,7 @@ function printTranslateText() {
         }
         // 選択中でないなら、文末に追加
         else {
+console.log("O4K");
             gofileend(); // 最後尾に
 
             // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
