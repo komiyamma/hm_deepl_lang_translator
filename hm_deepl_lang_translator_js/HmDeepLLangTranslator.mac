@@ -10,7 +10,6 @@ js {
 
 
 
-// 環境変数から、DeepL Apps Script の翻訳APIへのURLアドレスを取得。
 // ご自身で環境変数「DEEPL_SCRIPT_TRANSLATION」にDeepLのAPIのAUTH_KEYを設定してください。
 let auth_key = getenv("DEEPL_SCRIPT_TRANSLATION");
 
