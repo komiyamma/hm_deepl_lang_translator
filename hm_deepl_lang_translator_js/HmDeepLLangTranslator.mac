@@ -1,4 +1,4 @@
-﻿// HmDeepLLangTranslator.mac v1.2.1.1
+﻿// HmDeepLLangTranslator.mac v1.2.1.2
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
 
@@ -41,7 +41,7 @@ var translate_obj = {};
 function printTranslateText() {
     try {
         // エラーが出る可能性があるため、先頭でローカルに代入してみる
-        let text = translate_obj["translations"][0]["text"];
+        let answer = translate_obj["translations"][0]["text"];
 
         begingroupundo();
 
@@ -50,18 +50,25 @@ function printTranslateText() {
         // 選択中なら選択を解除して、選択位置の最後の座標に移動
         if (is_last_selecting) {
             moveto2(n_selendcolumn, n_selendlineno); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
+            // 全体を選択していたならば...
+            if (text == hidemaru.getTotalText()) {
+                // 何も選択していない時と同じ処理
+                if (column() != 0) {
+                    insertreturn();
+                }
+            }
 
             // 行末まで選択することで、カーソルが先頭にある。
             if (n_selendcolumn == 0) {
                 // 最後に改行がなければ改行を付ける
-                text = text.endsWith("\n") ? text : `${text}\n`;
+                answer = answer.endsWith("\n") ? answer : `${answer}\n`;
             }
 
             // 文頭から文末まで選択することで行選択相当になっている。
             else if (n_seltopcolumn == 0 && n_selendcolumn == n_linelen) {
                 // 文頭に最後改行が無いので、先頭に改行を入れる
                 // 文末の改行は選択している最後が改行を含むか含まないかでそのままにしておけば辻褄が合う
-                text = `\n${text}`;
+                answer = `\n${answer}`;
             }
         }
         // 選択中でないなら、文末に追加
@@ -74,7 +81,7 @@ function printTranslateText() {
             }
         }
 
-        insert(text);
+        insert(answer);
 
         endgroupundo();
 
