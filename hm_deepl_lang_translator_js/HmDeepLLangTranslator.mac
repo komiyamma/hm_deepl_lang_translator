@@ -73,7 +73,6 @@ function printTranslateText() {
         }
         // 選択中でないなら、文末に追加
         else {
-console.log("O4K");
             gofileend(); // 最後尾に
 
             // 移動した結果、カラム位置が「行の先頭」でないなら１つ改行入れて行の先頭へ
