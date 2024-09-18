@@ -1,4 +1,4 @@
-﻿// HmDeepLLangTranslator.mac v1.2.0.9
+﻿// HmDeepLLangTranslator.mac v1.2.1.1
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
 
@@ -45,9 +45,10 @@ function printTranslateText() {
 
         begingroupundo();
 
+        escapeselect();
+
         // 選択中なら選択を解除して、選択位置の最後の座標に移動
         if (is_last_selecting) {
-            escapeselect();
             moveto2(n_selendcolumn, n_selendlineno); // 選択してたら解除しつつも選択範囲の最後尾に。解除してからでも最後の選択位置を元にするから大丈夫。
 
             // 行末まで選択することで、カーソルが先頭にある。
