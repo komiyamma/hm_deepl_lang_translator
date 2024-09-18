@@ -34,7 +34,7 @@ const params = new URLSearchParams({
 
 // マクロ実行から翻訳結果が返ってくるまでの間に時間的なずれがあり、その間編集ペインはフリーであるため、選択中だったかを記憶しておく
 // これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
-const [is_last_selecting, n_seltopcolumn, n_selendcolumn, n_selendlineno, n_linelen] = [selecting(), seltopcolumn(), selendcolumn(), selendlineno(), linelen()];
+const [is_last_selecting, n_seltopcolumn, n_selendcolumn, n_selendlineno, n_linelen2] = [selecting(), seltopcolumn(), selendcolumn(), selendlineno(), linelen2()];
 
 // 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
 var translate_obj = {};
@@ -65,7 +65,7 @@ function printTranslateText() {
             }
 
             // 文頭から文末まで選択することで行選択相当になっている。
-            else if (n_seltopcolumn == 0 && n_selendcolumn == n_linelen) {
+            else if (n_seltopcolumn == 0 && n_selendcolumn == n_linelen2) {
                 // 文頭に最後改行が無いので、先頭に改行を入れる
                 // 文末の改行は選択している最後が改行を含むか含まないかでそのままにしておけば辻褄が合う
                 answer = `\n${answer}`;
