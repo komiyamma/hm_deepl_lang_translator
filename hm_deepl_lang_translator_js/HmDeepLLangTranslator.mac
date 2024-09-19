@@ -1,4 +1,4 @@
-﻿// HmDeepLLangTranslator.mac v1.2.1.2
+﻿// HmDeepLLangTranslator.mac v1.2.1.4
 // Copyright (c) 2023-2024 Akitsugu Komiyama
 // under the MIT License
 
@@ -25,6 +25,14 @@ let endpoint_url = "https://api-free.deepl.com/v2/translate";
 let source_lang = getarg(0);
 let target_lang = getarg(1);
 
+if(!source_lang && !target_lang) {
+    writeLineOutputPane(
+        "「翻訳元の言語」も「翻訳先の言語」も両方が指定されていません。\r\n" +
+        "「HmDeepLLangTranslator.mac」を直接実行していませんか？\r\n" + 
+        "「HmDeepLLangTranslator.mac」は直接実行する対象ではなく、「別のマクロから引数を付けて」呼び出すものです。\r\n"
+    );
+}
+
 const params = new URLSearchParams({
     auth_key,
     text,
@@ -36,13 +44,31 @@ const params = new URLSearchParams({
 // これにより翻訳マクロを実行した直後、まだ翻訳結果が返っていていないのにカーソルを動作させても良い形となり、ストレスがかなり軽減できる
 const [is_last_selecting, n_seltopcolumn, n_selendcolumn, n_selendlineno, n_linelen2] = [selecting(), seltopcolumn(), selendcolumn(), selendlineno(), linelen2()];
 
-// 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
 var translate_obj = {};
-function printTranslateText() {
+function getAnswerText() {
     try {
         // エラーが出る可能性があるため、先頭でローカルに代入してみる
-        let answer = translate_obj["translations"][0]["text"];
+        answer = translate_obj["translations"][0]["text"];
+    } catch (error) {
+        if (translate_obj.message != null) {
+            writeLineOutputPane("翻訳エラー:" + translate_obj.message);
+        } else {
+            writeLineOutputPane("翻訳エラー:" + error);
+        }
+    } finally {
+        translate_obj = {};
+    }
+}
 
+// 最後の表示用。出力の場所ややり方変えたければ、この関数を編集のこと。
+function printTranslateText() {
+    let answer = getAnswerText();
+
+    if (answer == null) {
+        return;
+    }
+
+    try {
         begingroupundo();
 
         escapeselect();
@@ -121,8 +147,8 @@ async function recieveFetchReply(data) {
             hidemaru.clearInterval(peRetry);
         }, 100);
 
-    } catch (e) {
-        writeLineOutputPane("翻訳エラー:");
+    } catch (error) {
+        writeLineOutputPane("翻訳エラー:" + error);
     }
 }
 
